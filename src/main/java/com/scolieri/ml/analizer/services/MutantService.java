@@ -5,18 +5,19 @@ import org.springframework.stereotype.Service;
 @Service
 public class MutantService {
 
-    private static final int NEEDED_CONSECUTIVE_GENES = 4;
+    private static final int NEEDED_GENES_MATRIX_DIMSENSIONS = 4;
+    private static final int NEEDED_CONSECUTIVE_GENES = 3;
 
     public boolean isMutant(String[] dna){
-        int numberOfMutanSecuence = 0;
-        if(dna.length <= NEEDED_CONSECUTIVE_GENES){
+        int numberOfMutantSequence = 0;
+        if(dna.length < NEEDED_GENES_MATRIX_DIMSENSIONS){
             return false;
         }
         char[][] dnaMatrix = getMatrix(dna);
         for(int i = 0;i < dna.length;i++){
             for(int j = 0;j < dna.length;j++){
-                numberOfMutanSecuence += getNumberOfMutanSecuence(dnaMatrix[i][j],i,j,dnaMatrix);
-                if(numberOfMutanSecuence >= 2){
+                numberOfMutantSequence += getNumberOfMutantSequence(i,j,dnaMatrix);
+                if(numberOfMutantSequence >= 2){
                     return true;
                 }
             }
@@ -35,37 +36,48 @@ public class MutantService {
         return dnaMatrix;
     }
 
-    private int getNumberOfMutanSecuence(char value, int i,int j,char[][] dnaMatrix){
+    private int getNumberOfMutantSequence(int i, int j, char[][] dnaMatrix){
         int numberOfValidRows = 0;
-        if(dnaMatrix[i+1][j] == value){
-            if(validateRow(dnaMatrix[i+1][j],i+1,j,dnaMatrix)){
+            if(validateRow(dnaMatrix,i,j) == NEEDED_CONSECUTIVE_GENES){
                 numberOfValidRows++;
             }
-        }
-
-        if(dnaMatrix[i][j+1] == value){
-            if(validateColumn(dnaMatrix[i][j+1],i,j+1,dnaMatrix)){
+            if(validateColumn(dnaMatrix,i,j) == NEEDED_CONSECUTIVE_GENES){
                 numberOfValidRows++;
             }
-        }
-
-        if(dnaMatrix[i+1][j+1] == value){
-            if(validateDiagonal(dnaMatrix[i+1][j+1],i+1,j+1,dnaMatrix)){
+            if(validateDiagonal(dnaMatrix,i,j) == NEEDED_CONSECUTIVE_GENES){
                 numberOfValidRows++;
             }
-        }
         return numberOfValidRows;
     }
 
-    private boolean validateRow(char secondValue, int i,int j,char[][] dnaMatrix){
-        return dnaMatrix[i+1][j] == secondValue && dnaMatrix[i+2][j] == secondValue;
+    private int validateColumn(char[][] dnaMatrix,int i,int j){
+        if (i+1 < dnaMatrix.length){
+            char value = dnaMatrix[i][j];
+            if(dnaMatrix[i+1][j] == value){
+                return 1 + validateColumn(dnaMatrix,i+1,j);
+            }
+
+        }
+        return 0;
     }
 
-    private boolean validateColumn(char secondValue, int i,int j,char[][] dnaMatrix){
-        return dnaMatrix[i][j+1] == secondValue && dnaMatrix[i][j+2] == secondValue;
+    private int validateRow(char[][] dnaMatrix,int i,int j){
+        if (j+1 < dnaMatrix.length){
+            char value = dnaMatrix[i][j];
+            if(dnaMatrix[i][j+1] == value){
+                return 1 + validateRow(dnaMatrix,i,j+1);
+            }
+        }
+        return 0;
     }
 
-    private boolean validateDiagonal(char secondValue, int i,int j,char[][] dnaMatrix){
-        return dnaMatrix[i+1][j+1] == secondValue && dnaMatrix[i+2][j+2] == secondValue;
+    private int validateDiagonal(char[][] dnaMatrix,int i,int j){
+        if (i+1 < dnaMatrix.length && j+1 < dnaMatrix.length){
+            char value = dnaMatrix[i][j];
+            if(dnaMatrix[i+1][j+1] == value){
+                return 1 + validateDiagonal(dnaMatrix,i+1,j+1);
+            }
+        }
+        return 0;
     }
 }

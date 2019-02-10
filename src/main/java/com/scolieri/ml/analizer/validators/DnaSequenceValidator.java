@@ -7,7 +7,7 @@ public class DnaSequenceValidator implements ConstraintValidator<DnaSequence,Str
 
     @Override
     public boolean isValid(final String[] value, final ConstraintValidatorContext context) {
-        if (value.length > 0 && value.length == value[0].length()){
+        if (value!= null && value.length > 0 && value.length == value[0].length()){
          for(int i = 1; i < value.length; i++){
              if(value[i].length() != value[0].length()) return false;
          }

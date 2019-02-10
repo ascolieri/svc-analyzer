@@ -23,7 +23,7 @@ public class MutantServiceTest {
 
     @Test
     public void isMutantValidTest(){
-        String[] dna = {"ATGCGA","ATGTGC","TTATCG","AGAAGG","CCCCTA","TCACTG"};
+        String[] dna = {"ATGCGA","CAGTGC","TTATGT","AGAAGG","CCCCTA","TCACTG"};
         boolean isMutant = mutantService.isMutant(dna);
         Assert.assertTrue(isMutant);
     }
@@ -37,7 +37,7 @@ public class MutantServiceTest {
 
     @Test
     public void isMutantOnlyColumnConsecutive(){
-        String[] dna =  {"TTGCGA", "CAGTGC", "TTATGT", "AGAAGG", "ACCCTA", "TCACTG"};
+        String[] dna =  {"ATGCGA","CAGTGC","TTGTGT","AGAAGG","AACCTA","TCACTG"};
         boolean isMutant = mutantService.isMutant(dna);
         Assert.assertFalse(isMutant);
     }
@@ -45,8 +45,28 @@ public class MutantServiceTest {
     @Test
     public void isMutantOnlyRowConsecutive(){
         String[] dna =  {"TTGCGA", "CAGTGC", "TTATGT", "AGAAGG", "ACCCTA", "TCACTG"};
+
+    }
+
+    @Test
+    public void isMutantOnlyColumnConsecutiveValuesTest(){
+        String[] dna = {"ATGCGA","ATGCGA","ATGCGA","ATGCGA"};
         boolean isMutant = mutantService.isMutant(dna);
-        Assert.assertFalse(isMutant);
+        Assert.assertTrue(isMutant);
+    }
+
+    @Test
+    public void isMutantOnlyRowConsecutiveValuesTest(){
+        String[] dna = {"AAAAAA","TTTTTT","ATGCGA","ATGCGA"};
+        boolean isMutant = mutantService.isMutant(dna);
+        Assert.assertTrue(isMutant);
+    }
+
+    @Test
+    public void isMutantOnlyDiagonalConsecutiveValuesTest(){
+        String[] dna = {"ATGCGA","CAGTGC","TCATTT","AGCAGG","CTCCTA","TCACTG"};
+        boolean isMutant = mutantService.isMutant(dna);
+        Assert.assertTrue(isMutant);
     }
 
 }
