@@ -27,4 +27,13 @@ public class Stats {
     public Long getCountHumanDna() {
         return countHumanDna;
     }
+
+    public Stats(final Long countMutantDna, final Long countHumanDna) {
+        this.countMutantDna = countMutantDna;
+        this.countHumanDna = countHumanDna;
+    }
+
+    public Stats(){
+
+    }
 }
