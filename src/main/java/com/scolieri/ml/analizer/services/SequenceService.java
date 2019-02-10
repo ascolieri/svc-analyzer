@@ -34,7 +34,7 @@ public class SequenceService {
 
         mutantResult = isMutant(dna);
         Sequence newSequence = new Sequence(dnaHash,mutantResult);
-        sequenceRepository.insertSequence(newSequence.getSequence(),newSequence.isMutant());
+        sequenceRepository.save(newSequence);
         return mutantResult;
     }
 
