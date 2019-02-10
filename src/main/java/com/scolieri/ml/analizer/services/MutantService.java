@@ -1,10 +1,15 @@
-package com.scolieri.ml.analizer.model;
+package com.scolieri.ml.analizer.services;
 
-public class DnaAnalizer {
+import org.springframework.stereotype.Service;
 
-    public boolean isMutan(String[] dna){
+@Service
+public class MutantService {
+
+    private static final int NEEDED_CONSECUTIVE_GENES = 4;
+
+    public boolean isMutant(String[] dna){
         int numberOfMutanSecuence = 0;
-        if(dna.length <= 2){
+        if(dna.length <= NEEDED_CONSECUTIVE_GENES){
             return false;
         }
         char[][] dnaMatrix = getMatrix(dna);
@@ -63,5 +68,4 @@ public class DnaAnalizer {
     private boolean validateDiagonal(char secondValue, int i,int j,char[][] dnaMatrix){
         return dnaMatrix[i+1][j+1] == secondValue && dnaMatrix[i+2][j+2] == secondValue;
     }
-
 }
