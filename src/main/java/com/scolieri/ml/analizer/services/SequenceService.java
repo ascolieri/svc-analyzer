@@ -3,20 +3,25 @@ package com.scolieri.ml.analizer.services;
 import com.google.common.hash.Hashing;
 import com.scolieri.ml.analizer.models.database.Sequence;
 import com.scolieri.ml.analizer.repositories.SequenceRepository;
+import com.scolieri.ml.analizer.repositories.StatsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Optional;
 
 @Service
+@Transactional
 public class SequenceService {
 
     private SequenceRepository sequenceRepository;
+    private StatsRepository statsRepository;
 
     @Autowired
-    public SequenceService(final SequenceRepository sequenceRepository) {
+    public SequenceService(final SequenceRepository sequenceRepository,final StatsRepository statsRepository) {
         this.sequenceRepository = sequenceRepository;
+        this.statsRepository = statsRepository;
     }
 
     private static final int NEEDED_GENES_MATRIX_DIMSENSIONS = 4;
@@ -31,11 +36,23 @@ public class SequenceService {
         if(existingSequence.isPresent()){
             return existingSequence.get().isMutant();
         }
-
         mutantResult = isMutant(dna);
-        Sequence newSequence = new Sequence(dnaHash,mutantResult);
-        sequenceRepository.save(newSequence);
+        onNewDnaRecord(dnaHash,mutantResult);
         return mutantResult;
+    }
+
+    private void onNewDnaRecord(String dnaHash,Boolean isMutant){
+        updateCounters(isMutant);
+        Sequence newSequence = new Sequence(dnaHash,isMutant);
+        sequenceRepository.save(newSequence);
+    }
+
+    private void updateCounters(Boolean isMutant){
+        if(isMutant){
+            statsRepository.updateMutantAndHumanCounter();
+        }else{
+            statsRepository.updateHumanCounter();
+        }
     }
 
     private String getHash(String[] dna){
