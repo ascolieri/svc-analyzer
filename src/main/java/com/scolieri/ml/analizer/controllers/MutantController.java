@@ -1,7 +1,7 @@
 package com.scolieri.ml.analizer.controllers;
 
-import com.scolieri.ml.analizer.models.MutantRequest;
-import com.scolieri.ml.analizer.services.MutantService;
+import com.scolieri.ml.analizer.models.transport.MutantRequest;
+import com.scolieri.ml.analizer.services.SequenceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,16 +16,16 @@ import javax.validation.Valid;
 @RequestMapping("/mutant/*")
 public class MutantController {
 
-    private MutantService mutantService;
+    private SequenceService sequenceService;
 
     @Autowired
-    public MutantController(final MutantService mutantService) {
-        this.mutantService = mutantService;
+    public MutantController(final SequenceService sequenceService) {
+        this.sequenceService = sequenceService;
     }
 
     @RequestMapping(value = "/", method = RequestMethod.POST)
     public ResponseEntity IsMutant(@Valid @RequestBody MutantRequest request){
-        boolean isMutant = mutantService.isMutant(request.getDna());
+        boolean isMutant = sequenceService.validateSequence(request.getDna());
         if(isMutant){
            return new ResponseEntity<>(HttpStatus.OK);
         }

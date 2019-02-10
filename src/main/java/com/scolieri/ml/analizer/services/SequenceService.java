@@ -1,14 +1,48 @@
 package com.scolieri.ml.analizer.services;
 
+import com.google.common.hash.Hashing;
+import com.scolieri.ml.analizer.models.database.Sequence;
+import com.scolieri.ml.analizer.repositories.SequenceRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.nio.charset.StandardCharsets;
+import java.util.Optional;
+
 @Service
-public class MutantService {
+public class SequenceService {
+
+    private SequenceRepository sequenceRepository;
+
+    @Autowired
+    public SequenceService(final SequenceRepository sequenceRepository) {
+        this.sequenceRepository = sequenceRepository;
+    }
 
     private static final int NEEDED_GENES_MATRIX_DIMSENSIONS = 4;
     private static final int NEEDED_CONSECUTIVE_GENES = 3;
 
-    public boolean isMutant(String[] dna){
+
+    public Boolean validateSequence(String[] dna){
+        Boolean mutantResult;
+        String dnaHash = getHash(dna);
+        Optional<Sequence> existingSequence = sequenceRepository.findBySequence(dnaHash);
+
+        if(existingSequence.isPresent()){
+            return existingSequence.get().isMutant();
+        }
+
+        mutantResult = isMutant(dna);
+        Sequence newSequence = new Sequence(dnaHash,mutantResult);
+        sequenceRepository.insertSequence(newSequence.getSequence(),newSequence.isMutant());
+        return mutantResult;
+    }
+
+    private String getHash(String[] dna){
+        return Hashing.sha512().hashString(String.join("",dna),StandardCharsets.UTF_8).toString();
+    }
+
+    private boolean isMutant(String[] dna){
         int numberOfMutantSequence = 0;
         if(dna.length < NEEDED_GENES_MATRIX_DIMSENSIONS){
             return false;

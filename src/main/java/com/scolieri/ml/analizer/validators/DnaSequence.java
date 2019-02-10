@@ -16,7 +16,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @Documented
 public @interface DnaSequence {
 
-    String message() default "Dna Secuence must be an NxN matrix";
+    String message() default "Dna Sequence must be an NxN matrix";
 
     Class<?>[] groups() default { };
 

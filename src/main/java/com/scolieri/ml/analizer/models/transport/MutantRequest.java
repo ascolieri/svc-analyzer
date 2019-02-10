@@ -1,4 +1,4 @@
-package com.scolieri.ml.analizer.models;
+package com.scolieri.ml.analizer.models.transport;
 
 import com.scolieri.ml.analizer.validators.DnaSequence;
 

@@ -2,8 +2,8 @@ package com.scolieri.ml.analizer.controllers;
 
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.scolieri.ml.analizer.models.MutantRequest;
-import com.scolieri.ml.analizer.services.MutantService;
+import com.scolieri.ml.analizer.models.transport.MutantRequest;
+import com.scolieri.ml.analizer.services.SequenceService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -29,7 +29,7 @@ public class MutantControllerTest {
     private MockMvc mockMvc;
 
     @MockBean
-    private MutantService mutantService;
+    private SequenceService sequenceService;
 
     private ObjectMapper mapper;
 
@@ -41,7 +41,7 @@ public class MutantControllerTest {
     @Test
     public void isMutantTrueTest() throws Exception {
         String[] dna =new String[]{"ATGCGA","CAGTGC","TTATGT","AGAAGG","CCCCTA","TCACTG"};
-        when(mutantService.isMutant(dna)).thenReturn(true);
+        when(sequenceService.validateSequence(dna)).thenReturn(true);
         MutantRequest mutantRequest = new MutantRequest();
         mutantRequest.setDna(dna);
         String body = this.mapper.writeValueAsString(mutantRequest);
@@ -88,7 +88,7 @@ public class MutantControllerTest {
     @Test
     public void isMutantFalseTest() throws Exception{
         String[] dna =new String[]{"ATGCGA","CAGTGC","TTATGT","AGAAGG","CCCCTA","TCACTG"};
-        when(mutantService.isMutant(dna)).thenReturn(false);
+        when(sequenceService.validateSequence(dna)).thenReturn(false);
         MutantRequest mutantRequest = new MutantRequest();
         mutantRequest.setDna(dna);
         String body = this.mapper.writeValueAsString(mutantRequest);
