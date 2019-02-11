@@ -3,6 +3,9 @@ package com.scolieri.ml.analyzer.validators;
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
+/**
+ * Validator that checks that the matrix is not empty and correspond to an NxN matrix.
+ */
 public class DnaSequenceValidator implements ConstraintValidator<DnaSequence,String[]> {
 
     @Override

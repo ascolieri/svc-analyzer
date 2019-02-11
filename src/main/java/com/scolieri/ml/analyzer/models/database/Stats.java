@@ -7,6 +7,9 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
+/**
+ * Represent the statistics of the database
+ */
 @Entity(name = "stats")
 public class Stats {
 

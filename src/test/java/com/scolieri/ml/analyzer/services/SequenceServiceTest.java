@@ -1,7 +1,9 @@
 package com.scolieri.ml.analyzer.services;
 
+import com.scolieri.ml.analyzer.business.MutantAnalyzer;
 import com.scolieri.ml.analyzer.models.database.Sequence;
 import com.scolieri.ml.analyzer.repositories.SequenceRepository;
+import com.scolieri.ml.analyzer.repositories.StatsRepository;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -13,7 +15,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import java.util.Optional;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -25,59 +27,32 @@ public class SequenceServiceTest {
     @MockBean
     private SequenceRepository sequenceRepository;
 
-    @Test
-    public void isMutantWithInsufficientGenes(){
-        String[] dna = new String[]{"AA","BB"};
-        boolean isMutant = sequenceService.validateSequence(dna);
-        Assert.assertFalse(isMutant);
-    }
+    @MockBean
+    private StatsRepository statsRepository;
+
+    @MockBean
+    private MutantAnalyzer mutantAnalyzer;
 
     @Test
-    public void isMutantValidTest(){
+    public void isMutantValueNotInDbAndIsMutantTest(){
         when(sequenceRepository.findBySequence(any())).thenReturn(Optional.empty());
         String[] dna = {"ATGCGA","CAGTGC","TTATGT","AGAAGG","CCCCTA","TCACTG"};
+        when(mutantAnalyzer.isMutant(dna)).thenReturn(true);
         boolean isMutant = sequenceService.validateSequence(dna);
         Assert.assertTrue(isMutant);
+        verify(statsRepository,times(1)).updateMutantAndHumanCounter();
+        verify(sequenceRepository,times(1)).save(any());
     }
 
     @Test
-    public void isMutantOnlyDiagonalConsecutive(){
+    public void isMutantValueNotInDbAndNotMutantTest(){
         when(sequenceRepository.findBySequence(any())).thenReturn(Optional.empty());
-        String[] dna =  {"ATGCTA", "CAGTAC", "TTATTT", "AGAAGG", "CCTCTA", "TCACTG"};
+        String[] dna = {"ATGCGA","CAGTGC","TTATGT","AGAAGG","CCCCTA","TCACTG"};
+        when(mutantAnalyzer.isMutant(dna)).thenReturn(false);
         boolean isMutant = sequenceService.validateSequence(dna);
         Assert.assertFalse(isMutant);
-    }
-
-    @Test
-    public void isMutantOnlyColumnConsecutive(){
-        when(sequenceRepository.findBySequence(any())).thenReturn(Optional.empty());
-        String[] dna =  {"ATGCGA","CAGTGC","TTGTGT","AGAAGG","AACCTA","TCACTG"};
-        boolean isMutant = sequenceService.validateSequence(dna);
-        Assert.assertFalse(isMutant);
-    }
-
-    @Test
-    public void isMutantOnlyColumnConsecutiveValuesTest(){
-        when(sequenceRepository.findBySequence(any())).thenReturn(Optional.empty());
-        String[] dna = {"ATGCGA","ATGCGA","ATGCGA","ATGCGA"};
-        boolean isMutant = sequenceService.validateSequence(dna);
-        Assert.assertTrue(isMutant);
-    }
-
-    @Test
-    public void isMutantOnlyRowConsecutiveValuesTest(){
-        when(sequenceRepository.findBySequence(any())).thenReturn(Optional.empty());
-        String[] dna = {"AAAAAA","TTTTTT","ATGCGA","ATGCGA"};
-        boolean isMutant = sequenceService.validateSequence(dna);
-        Assert.assertTrue(isMutant);
-    }
-
-    @Test
-    public void isMutantOnlyDiagonalConsecutiveValuesTest(){
-        when(sequenceRepository.findBySequence(any())).thenReturn(Optional.empty());
-        String[] dna = {"ATGCGA","CAGTGC","TCATTT","AGCAGG","CTCCTA","TCACTG"};
-        boolean isMutant = sequenceService.validateSequence(dna);
-        Assert.assertTrue(isMutant);
+        verify(statsRepository,times(1)).updateHumanCounter();
+        verify(sequenceRepository,times(1)).save(any());
     }
 
     @Test

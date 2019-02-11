@@ -10,6 +10,10 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
+
+/**
+ * Handles the errors for the api.
+ */
 @ControllerAdvice
 public class ErrorHandlingControllerAdvice {
 

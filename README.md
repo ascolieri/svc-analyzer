@@ -9,7 +9,7 @@ Api that search if a human being is mutant or not based on DNA sequence
 * Swagger for documentation
 
 ## Deployed app
-`https://svc-analyzer.herokuapp.com/swagger-ui.html`
+<https://svc-analyzer.herokuapp.com/swagger-ui.html>
 
 ## How to run
 * Set up a local database by running<br/>

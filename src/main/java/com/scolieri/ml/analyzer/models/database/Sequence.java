@@ -6,6 +6,9 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
+/**
+ * Represnet a sequence store in the database.
+ */
 @Entity(name = "dna")
 public class Sequence {
     @Id
