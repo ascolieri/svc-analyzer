@@ -62,4 +62,11 @@ public class ErrorHandlingControllerAdviceTest {
         Assert.assertEquals("DEFAULT_MESSAGE",response.getViolations().get(0).getMessage());
 
     }
+
+    @Test
+    public void onInvalidSequenceExceptionTest(){
+        ValidationErrorResponse response = controllerAdvice.onInvalidSequenceException(new InvalidSequenceException());
+        Assert.assertEquals("dna",response.getViolations().get(0).getFieldName());
+        Assert.assertNotNull(response.getViolations().get(0).getMessage());
+    }
 }

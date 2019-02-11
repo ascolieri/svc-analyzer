@@ -2,6 +2,7 @@ package com.scolieri.ml.analyzer.controllers;
 
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.scolieri.ml.analyzer.errorhandling.InvalidSequenceException;
 import com.scolieri.ml.analyzer.models.transport.MutantRequest;
 import com.scolieri.ml.analyzer.services.SequenceService;
 import org.junit.Before;
@@ -54,6 +55,19 @@ public class MutantControllerTest {
     @Test
     public void isMutantBadRequestNotSquareMatrixTest() throws Exception{
         String[] dna =new String[]{"ATG","CAGTGC","TTATGT","AGAAGG","CCCCTA","TCACTG"};
+        MutantRequest mutantRequest = new MutantRequest();
+        mutantRequest.setDna(dna);
+        String body = this.mapper.writeValueAsString(mutantRequest);
+        this.mockMvc.perform(post("/mutant/")
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .content(body))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    public void isMutantBadRequestInvalidCharacterTest() throws Exception{
+        String[] dna =new String[]{"XAGTGC","CAGTGC","TTATGT","AGAAGG","CCCCTA","TCACTG"};
+        when(sequenceService.validateSequence(dna)).thenThrow(new InvalidSequenceException());
         MutantRequest mutantRequest = new MutantRequest();
         mutantRequest.setDna(dna);
         String body = this.mapper.writeValueAsString(mutantRequest);

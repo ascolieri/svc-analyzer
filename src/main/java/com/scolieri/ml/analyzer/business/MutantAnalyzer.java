@@ -1,6 +1,8 @@
 package com.scolieri.ml.analyzer.business;
 
+import com.scolieri.ml.analyzer.errorhandling.InvalidSequenceException;
 import org.springframework.stereotype.Component;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 
 /**
  * Handle the analysis of the DNA sequence.
@@ -38,7 +40,12 @@ public class MutantAnalyzer {
         for(int i = 0; i < dna.length;i++){
             String dnaRow = dna[i];
             for(int j = 0;j<dna.length;j++){
-                dnaMatrix[i][j] = dnaRow.charAt(j);
+                char base = dnaRow.charAt(j);
+                if(base == 'A' || base == 'T' || base == 'C' || base == 'G'){
+                    dnaMatrix[i][j] = base;
+                }else{
+                    throw new InvalidSequenceException();
+                }
             }
         }
         return dnaMatrix;

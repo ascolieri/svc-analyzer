@@ -30,6 +30,17 @@ public class ErrorHandlingControllerAdvice {
         return error;
     }
 
+    @ExceptionHandler(InvalidSequenceException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseBody
+    ValidationErrorResponse onInvalidSequenceException(
+            InvalidSequenceException e) {
+        ValidationErrorResponse error = new ValidationErrorResponse();
+            error.getViolations().add(
+                    new Violation(e.getFieldName(), e.getMessage()));
+        return error;
+    }
+
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ResponseBody

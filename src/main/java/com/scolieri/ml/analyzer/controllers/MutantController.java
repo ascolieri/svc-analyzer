@@ -31,7 +31,8 @@ public class MutantController {
     @ApiOperation(value = "Verify if the DNA sequence corresponds to a mutant")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "The DNA corresponds to a mutant"),
-            @ApiResponse(code = 403, message = "The DNA corresponds to a single human")
+            @ApiResponse(code = 403, message = "The DNA corresponds to a single human"),
+            @ApiResponse(code = 400, message = "The DNA sequence contains invalid characters")
     })
     @RequestMapping(value = "/", method = RequestMethod.POST)
     public ResponseEntity<Void> IsMutant(@Valid @RequestBody MutantRequest request){
