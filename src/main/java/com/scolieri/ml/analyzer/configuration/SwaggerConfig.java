@@ -29,7 +29,7 @@ public class SwaggerConfig {
 
     private ApiInfo metaData() {
         return new ApiInfo(
-                "Spring Boot REST API",
+                "Mutant Analyzer API",
                 "Spring Boot REST API for DNA Analysis",
                 "1.0",
                 null,
