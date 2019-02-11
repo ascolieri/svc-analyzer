@@ -8,7 +8,7 @@ Api that search if a human being is mutant or not based on DNA sequence
 * Spring Boot 2.1
 * Swagger for documentation
 
-## Deployed app
+## Deployed app and swagger spec
 <https://svc-analyzer.herokuapp.com/swagger-ui.html>
 
 ## How to run
