@@ -10,13 +10,13 @@
 	</parent>
 	<groupId>com.scolieri.ml</groupId>
 	<artifactId>svc-analizer</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
-	<name>svc-analizer</name>
-	<description>Mercado libre code challenge</description>
+	<version>1.0.0</version>
+	<name>svc-analyzer</name>
+	<description>Api that search if a human being is mutant or not based on DNA sequence</description>
 
 	<properties>
 		<java.version>1.8</java.version>
-        <springfox.version>2.8.0</springfox.version>
+        <springfox.version>2.9.2</springfox.version>
 	</properties>
 
 	<dependencies>
